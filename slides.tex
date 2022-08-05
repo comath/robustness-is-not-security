@@ -1,4 +1,5 @@
 \documentclass{beamer}
+\usepackage{algorithm,algorithmic}
 \usepackage{comment}
 \usepackage{multirow}
 \usepackage{bibentry}
@@ -45,10 +46,12 @@
 
 \begin{frame}
     \frametitle{The Adversarial Example Definition Everyone Says}
-    \textbf{OpenAI} - Adversarial examples are inputs to machine learning models that an attacker has intentionally designed to cause the model to make a mistake; they're like optical illusions for machines.
-    \newline
-    \newline
-    \textbf{TensorFlow} - Adversarial examples are specialised inputs created with the purpose of confusing a neural network, resulting in the misclassification of a given input.
+    \begin{definition}
+        \textbf{OpenAI} - Adversarial examples are inputs to machine learning models that an attacker has intentionally designed to cause the model to make a mistake; they're like optical illusions for machines.
+    \end{definition}
+    \begin{definition}
+        \textbf{TensorFlow} - Adversarial examples are specialised inputs created with the purpose of confusing a neural network, resulting in the misclassification of a given input.
+    \end{definition}
 \end{frame}
 
 \begin{frame}
@@ -63,10 +66,12 @@
 
 \begin{frame}
     \frametitle{The Robust Definition Everyone Says}
-    \textbf{Investopedia} - In the world of investing, robust is a characteristic describing a model's, test's, or system's ability to perform effectively while its variables or assumptions are altered.
-    \newline
-    \newline
-    \textbf{Data Robot} - A way of modeling that to minimizes your productionalized model from uncertain predictions.
+    \begin{definition}
+        \textbf{Investopedia} - In the world of investing, robust is a characteristic describing a model's, test's, or system's ability to perform effectively while its variables or assumptions are altered.
+    \end{definition}
+    \begin{definition}
+        \textbf{Data Robot} - A way of modeling that to minimizes your productionalized model from uncertain predictions.
+    \end{definition}
 \end{frame}
 
 \begin{frame}
@@ -203,6 +208,12 @@
 
         \vspace*{30pt}
         2. It's Impossible to Check
+        \vspace*{30pt}
+
+        3. It's Impossible to Make
+        \vspace*{30pt}
+
+        3. It Lowers Accuracy
     \end{center}
 \end{frame}
 
@@ -315,9 +326,56 @@
     \end{center}
 \end{frame}
 
-\begin{frame}{The Issues with Robustness: It Lowers Accuracy}
-    TODO
+\begin{frame}{The Issues with Robustness: It's Impossible to Make}
+    People make models "robust" by adversarially training them \cite{adv_training}:
+
+    \begin{algorithm}[H]
+        \begin{algorithmic}[1]
+            \STATE Select minibatch $B$, initialize gradient vector $g = 0$
+            \FOR{$(x,y) \in B$}
+                \STATE \textbf<2>{Find an attack perturbation} $r^*$ by (approximately) optimizing: $$ r^* = \max_{||r|| < \epsilon} l(f_\theta (x+r), y) $$
+                \STATE Add gradient at $r^*$: $$g = g + \Delta_\theta l(f_\theta(x+ r^*), y)$$
+            \ENDFOR
+
+
+        \STATE Update parameters $\theta$: $$\theta = \theta - \frac{\alpha}{|B|}g$$
+        \end{algorithmic}
+        \caption{Robust Training}
+        \label{alg:seq}
+    \end{algorithm}
 \end{frame}
+
+\begin{frame}{The Issues with Robustness: It's Impossible to Make*}
+    Robustness can be quantified in a different way: the classifier is Lipschitz continuous \cite{Lipschitz_robustness}.
+    \begin{center}
+        1d Lipschitz Function \cite{Lipschitz_diagram}:
+
+        \includegraphics[scale=0.25]{lipschitz_diagram.png}
+
+        I don't think this is ready for production. A lot of the techniques that try to guarantee this rely on regularization which isn't mathematically sound.
+    \end{center}
+\end{frame}
+
+\begin{frame}{The Issues with Robustness: It Lower Accuracy}
+    \begin{center}
+        The classifier needs to adapt and may pick a non-optimal decision boundary \cite{robustness_issue}:
+
+        \includegraphics[scale=0.25]{robustness_issue.png}
+
+        There even may be test points of one class within the robustness ball of a different class. 
+    \end{center}
+\end{frame}
+
+\begin{frame}{The Issues with Robustness: It Lowers Accuracy}
+    \begin{center}
+        Even with tiny radii it can significantly lower accuracy \cite{robustness_tradeoff_infinite_data}:
+
+        \includegraphics[scale=0.22]{accuracy_of_robust_nn.png}
+
+        With enough data is a common refrain. 
+    \end{center}
+\end{frame}
+
 
 
 \section{How ML Bypasses Really Work}
@@ -468,22 +526,6 @@
         
         This policy puts an expiration date on attacks. \cite{proofpoint_cve}
     \end{center}
-\end{frame}
-
-\section{General Recommendations for ML}
-
-\begin{frame}{For Image Based Domains}
-    \textbf{In Progress}
-    \vspace{10pt}
-
-    Your data probably moves less, there's less of an incentive to mess with you. It still moves.
-    \vspace{10pt}
-
-    There's probably simpler ways of messing with your system that don't require a lot of time from a smart person with a lot of valuable knowledge.
-\end{frame}
-
-\begin{frame}{For Text Based Domains}
-    \textbf{TODO}
 \end{frame}
 
 \begin{frame}[t, allowframebreaks]

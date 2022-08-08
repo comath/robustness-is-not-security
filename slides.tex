@@ -35,6 +35,9 @@
 \item Founded the AI Village.
 \item Formerly at Endgame / Elastic
 \end{itemize}
+\vspace{20pt}
+
+Twitter: {@}comathematician
 \end{frame}
 
 \begin{frame}
@@ -325,7 +328,7 @@
     \end{center}
 \end{frame}
 
-\begin{frame}{The Issues with Robustness: It's Impossible to Make}
+\begin{frame}{The Issues with Robustness: It's Impossible to Make*}
     People make models "robust" by adversarially training them \cite{adv_training}:
 
     \begin{algorithm}[H]
@@ -355,6 +358,19 @@
     \end{center}
 \end{frame}
 
+\begin{frame}{The Issues with Robustness: It's Possible to Make*}
+    If you add more models and a noise schema it is possible to be robust \cite{florian_robustness}.
+    \begin{center}
+        
+
+        \includegraphics[scale=1.1]{latent_modelfigure.png}
+
+        \includegraphics[scale=0.15]{latent_reconstruction2.png}
+
+        This adds a lot of complexity \cite{latent_diffusion_1}\cite{rombach2021highresolution}. Older versions of this idea have issues. \textbf{This does not work for tabular data.}
+    \end{center}
+\end{frame}
+
 \begin{frame}{The Issues with Robustness: It Lower Accuracy}
     \begin{center}
         The classifier needs to adapt and may pick a non-optimal decision boundary \cite{robustness_issue}:
@@ -375,7 +391,15 @@
     \end{center}
 \end{frame}
 
+\begin{frame}{The Issues with Robustness: It Lowers Accuracy}
+    \begin{center}
+        Even with tiny radii it can significantly lower accuracy \cite{florian_robustness}:
 
+        \includegraphics[scale=0.3]{certified_robustness.png}
+
+        This is with the diffusion model.
+    \end{center}
+\end{frame}
 
 \section{How ML Bypasses Really Work}
 
